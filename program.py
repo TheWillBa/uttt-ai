@@ -39,7 +39,7 @@ def check_3x3_win(board):
         if board[indexes[0]] == board[indexes[1]] and \
                 board[indexes[1]] == board[indexes[2]] and \
                 board[indexes[0]] != NO_MARKER:
-            return indexes[0]
+            return board[indexes[0]]
     return NO_MARKER
 
 
@@ -68,5 +68,4 @@ def local_to_global(l):
     return l[0] + 9 * l[1]
 
 
-for i in range(0, 81):
-    print(str(i) + " " + str(local_to_global(global_to_local(i))))
+print(check_3x3_win(main_board[1]))
