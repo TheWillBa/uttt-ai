@@ -29,7 +29,8 @@ print(main_board)
 #  Pygame initialization
 pygame.init()
 SCREEN = pygame.display.set_mode([500, 500])
-SQUARE_SIDE = 20
+OVERLAYER = pygame.Surface((500, 500), pygame.SRCALPHA)
+SQUARE_SIDE = 50
 P0_COLOR = (0, 0, 255)
 P1_COLOR = (255, 0, 0)
 
@@ -50,22 +51,31 @@ def draw_3x3_board(board, x, y):
 
             if board[3 * j + i] == gp.PLAYER1_MARKER:
                 pygame.draw.circle(SCREEN, P1_COLOR,
-                                   (x + j * SQUARE_SIDE + SQUARE_SIDE / 2, y + j * SQUARE_SIDE + SQUARE_SIDE / 2),
+                                   (x + i * SQUARE_SIDE + SQUARE_SIDE / 2, y + j * SQUARE_SIDE + SQUARE_SIDE / 2),
                                    SQUARE_SIDE / 2 * 0.9)
 
 
-running = True
-draw_3x3_board([0, 0, 1, 0, 2, 0, 0, 0, 0], 0, 0)
-while running:
+def draw_big_board(bb, x, y):
+    for i in range(0, 3):
+        for j in range(0, 3):
+            draw_3x3_board(bb[3 * j + i], x + 3 * i * SQUARE_SIDE, y + 3 * j * SQUARE_SIDE)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
-    pygame.display.flip()
+# Draws an overlay over board number local_num
+# on big board with top left at x, y
+def draw_board_overlay(local_num, x, y):
+    yl = int(np.floor(local_num / 3))
+    xl = local_num - yl * 3
+    pygame.draw.rect(OVERLAYER, (255, 255, 0, 100),
+                     (x + 3 * xl * SQUARE_SIDE, y + 3 * yl * SQUARE_SIDE, 3 * SQUARE_SIDE, 3 * SQUARE_SIDE))
 
+
+draw_big_board(main_board, 0, 0)
 # GAME LOOP
-while winner == gp.NO_MARKER:
+
+running = True
+while winner == gp.NO_MARKER and running:
+    print("________________________________________")
     current_marker = markers[current_player]
     all_moves = gp.valid_moves(main_board, current_local_board)
 
@@ -94,7 +104,7 @@ while winner == gp.NO_MARKER:
         main_board_wins[local_board_number] = local_winner
         winner = gp.check_3x3_win(main_board_wins)
 
-    print("main wins: " + str(main_board_wins))
+    # print("main wins: " + str(main_board_wins))
 
     if winner > gp.NO_MARKER:
         print("Player " + str(winner) + " wins")
@@ -110,4 +120,16 @@ while winner == gp.NO_MARKER:
         if event.type == pygame.QUIT:
             running = False
 
+    draw_big_board(main_board, 0, 0)
+    OVERLAYER.fill((0, 0, 0, 0))
+    draw_board_overlay(current_local_board, 0, 0)
+    SCREEN.blit(OVERLAYER, (0, 0))
     pygame.display.flip()
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            if event.type == pygame.KEYDOWN:
+                waiting = False
