@@ -112,7 +112,7 @@ print("Welcome to Ultimate tic tac toe!")
 
 # Initialize empty game state
 main_board = np.zeros((9, 9))
-main_board_wins = np.zeros((9, 1))
+main_board_wins = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 current_local_board = NO_LOCAL_BOARD
 
 # Allows to easily swap players and markers
@@ -125,6 +125,12 @@ print(main_board)
 # GAME LOOP
 while winner == NO_MARKER:
     current_marker = markers[current_player]
+    all_moves = valid_moves(main_board, current_local_board)
+
+    # TODO fix error of playing into a full board better later
+    if len(all_moves) < 1:
+        current_local_board = NO_LOCAL_BOARD
+
     all_moves = valid_moves(main_board, current_local_board)
 
     # TODO make is easy to change out players, also currently doesnt depend on player
@@ -141,18 +147,19 @@ while winner == NO_MARKER:
 
     print(main_board)
 
-    if local_winner > NO_MARKER:
+    if local_winner != NO_MARKER:
         # If there was a local victory, see then if that ended the game
         main_board_wins[local_board_number] = local_winner
         winner = check_3x3_win(main_board_wins)
 
+    print("main wins: " + str(main_board_wins))
+
     if winner > NO_MARKER:
-        print("Player " + str(winner) + "wins")
+        print("Player " + str(winner) + " wins")
 
     elif winner == DRAW:
         print("Draw")
 
     # Change global-local board to local move value from last time
     current_local_board = local_sq
-    current_player = (current_player + 1) % 2
-
+    current_player = int((current_player + 1) % 2)
