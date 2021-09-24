@@ -1,30 +1,15 @@
+import random
+
 import numpy as np
 
+# TODO move the game playing functions to separate file/directory
+
 #  Constants
+DRAW = -1
 NO_MARKER = 0
 PLAYER0_MARKER = 1
 PLAYER1_MARKER = 2
-X = PLAYER0_MARKER
-O = PLAYER1_MARKER
-
-markers = [X, O]
-current_player = 0
-
 NO_LOCAL_BOARD = -1
-
-main_board = np.zeros((9, 9))
-main_board_wins = np.zeros((3, 3))
-
-current_local_board = NO_LOCAL_BOARD
-
-
-# Places the player marker pm in the square sq of the current local board
-# sq must be between 1 and 9, inclusive
-
-def play_local_in_current(sq, pm):
-    # TODO check for invalid input
-    main_board[current_local_board, sq] = pm
-
 
 WIN_INDEXES = [[0, 1, 2],
                [3, 4, 5],
@@ -44,6 +29,10 @@ def check_3x3_win(board):
                 board[indexes[1]] == board[indexes[2]] and \
                 board[indexes[0]] != NO_MARKER:
             return board[indexes[0]]
+
+    # If no one has won but the board is full, is draw
+    if NO_MARKER not in board:
+        return DRAW
     return NO_MARKER
 
 
@@ -111,10 +100,59 @@ def mark_big_board(big_board, g_sq, marker):
     big_board[local[1], local[0]] = marker
 
 
-# print(valid_moves(, NO_LOCAL_BOARD))
+# Move selection functions (AI and human!)
+# TODO move these to their own directory
 
-for i in range(0, 81):
+def random_player(moves):
+    return random.choice(moves)
+
+
+# GAME SPACE
+print("Welcome to Ultimate tic tac toe!")
+
+# Initialize empty game state
+main_board = np.zeros((9, 9))
+main_board_wins = np.zeros((9, 1))
+current_local_board = NO_LOCAL_BOARD
+
+# Allows to easily swap players and markers
+current_player = 0
+markers = [PLAYER0_MARKER, PLAYER1_MARKER]
+winner = NO_MARKER
+
+print(main_board)
+
+# GAME LOOP
+while winner == NO_MARKER:
+    current_marker = markers[current_player]
+    all_moves = valid_moves(main_board, current_local_board)
+
+    # TODO make is easy to change out players, also currently doesnt depend on player
+    selected_move = random_player(all_moves)
+
+    # move local pair
+    move_lp = global_to_local(selected_move)
+    local_sq = move_lp[0]
+    local_board_number = move_lp[1]
+
+    mark_big_board(main_board, selected_move, current_marker)
+
+    local_winner = check_3x3_win(main_board[local_board_number])
+
     print(main_board)
-    mark_big_board(main_board, i, PLAYER1_MARKER)
-    print(valid_moves(main_board, NO_LOCAL_BOARD))
-    print(main_board)
+
+    if local_winner > NO_MARKER:
+        # If there was a local victory, see then if that ended the game
+        main_board_wins[local_board_number] = local_winner
+        winner = check_3x3_win(main_board_wins)
+
+    if winner > NO_MARKER:
+        print("Player " + str(winner) + "wins")
+
+    elif winner == DRAW:
+        print("Draw")
+
+    # Change global-local board to local move value from last time
+    current_local_board = local_sq
+    current_player = (current_player + 1) % 2
+
