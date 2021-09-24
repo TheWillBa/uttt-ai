@@ -2,10 +2,13 @@ import numpy as np
 
 #  Constants
 NO_MARKER = 0
-PLAYER1_MARKER = 1
-PLAYER2_MARKER = 2
-X = PLAYER1_MARKER
-O = PLAYER2_MARKER
+PLAYER0_MARKER = 1
+PLAYER1_MARKER = 2
+X = PLAYER0_MARKER
+O = PLAYER1_MARKER
+
+markers = [X, O]
+current_player = 0
 
 NO_LOCAL_BOARD = -1
 
@@ -23,7 +26,7 @@ def play_local_in_current(sq, pm):
     main_board[current_local_board, sq] = pm
 
 
-win_indexes = [[0, 1, 2],
+WIN_INDEXES = [[0, 1, 2],
                [3, 4, 5],
                [6, 7, 8],
                [0, 4, 8],
@@ -33,9 +36,10 @@ win_indexes = [[0, 1, 2],
                [2, 5, 8]]
 
 
-# Returns the winner marker of the board,
+# Effectively functional
+# Returns the winner marker of the board
 def check_3x3_win(board):
-    for indexes in win_indexes:
+    for indexes in WIN_INDEXES:
         if board[indexes[0]] == board[indexes[1]] and \
                 board[indexes[1]] == board[indexes[2]] and \
                 board[indexes[0]] != NO_MARKER:
@@ -54,6 +58,7 @@ def check_3x3_win(board):
 # 6 7 8 | 15 16 17 |
 
 
+# FUNCTIONAL
 # Converts a global square number (0-80) to a local
 # pair containing [local_square_number, board_number]
 def global_to_local(g):
@@ -62,10 +67,54 @@ def global_to_local(g):
     return [l, lb_num]
 
 
+# FUNCTIONAL
 # Converts a local pair containing [local_square_number, board_number]
 # to a global location 0-80
 def local_to_global(l):
     return l[0] + 9 * l[1]
 
 
-print(check_3x3_win(main_board[1]))
+# Gets the valid moves based on the global board state and
+# the currently active board
+def valid_moves(big_board, current_local):
+    moves = []
+    if current_local == NO_LOCAL_BOARD:
+        for i in range(0, 9):
+            moves = moves + valid_moves_3x3_global(big_board[i], i)
+    else:
+        moves = valid_moves_3x3_global(big_board[current_local], current_local)
+    return moves
+
+
+# Returns the valid moves of a 3x3 board converted to global numbers
+def valid_moves_3x3_global(board, board_number):
+    l_moves = valid_moves_3x3(board)
+    moves = []
+    for move in l_moves:
+        moves.append(local_to_global([move, board_number]))
+    return moves
+
+
+# Returns the playable moves on a basic 3x3 board
+def valid_moves_3x3(board):
+    moves = []
+    for i in range(0, 9):
+        val = board[i]
+        if val == NO_MARKER:
+            moves.append(i)
+    return moves
+
+
+# Marks a big board at the global location given
+def mark_big_board(big_board, g_sq, marker):
+    local = global_to_local(g_sq)
+    big_board[local[1], local[0]] = marker
+
+
+# print(valid_moves(, NO_LOCAL_BOARD))
+
+for i in range(0, 81):
+    print(main_board)
+    mark_big_board(main_board, i, PLAYER1_MARKER)
+    print(valid_moves(main_board, NO_LOCAL_BOARD))
+    print(main_board)
