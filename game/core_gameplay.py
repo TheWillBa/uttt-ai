@@ -85,6 +85,10 @@ def valid_moves_3x3_global(board, board_number):
 # Returns the playable moves on a basic 3x3 board
 def valid_moves_3x3(board):
     moves = []
+
+    # There are no valid moves on a won board
+    if check_3x3_win(board):
+        return moves
     for i in range(0, 9):
         val = board[i]
         if val == NO_MARKER:
