@@ -63,19 +63,19 @@ def local_to_global(l):
 
 # Gets the valid moves based on the global board state and
 # the currently active board
-def valid_moves(big_board, current_local):
+def valid_moves(big_board, current_local, can_move_in_won_board):
     moves = []
     if current_local == NO_LOCAL_BOARD:
         for i in range(0, 9):
-            moves = moves + valid_moves_3x3_global(big_board[i], i)
+            moves = moves + valid_moves_3x3_global(big_board[i], i, can_move_in_won_board)
     else:
-        moves = valid_moves_3x3_global(big_board[current_local], current_local)
+        moves = valid_moves_3x3_global(big_board[current_local], current_local, can_move_in_won_board)
     return moves
 
 
 # Returns the valid moves of a 3x3 board converted to global numbers
-def valid_moves_3x3_global(board, board_number):
-    l_moves = valid_moves_3x3(board)
+def valid_moves_3x3_global(board, board_number, can_move_in_won_board):
+    l_moves = valid_moves_3x3(board, can_move_in_won_board)
     moves = []
     for move in l_moves:
         moves.append(local_to_global([move, board_number]))
@@ -83,12 +83,14 @@ def valid_moves_3x3_global(board, board_number):
 
 
 # Returns the playable moves on a basic 3x3 board
-def valid_moves_3x3(board):
+def valid_moves_3x3(board, can_move_in_won_board):
     moves = []
 
     # There are no valid moves on a won board
-    if check_3x3_win(board):
-        return moves
+    if not can_move_in_won_board:
+        if check_3x3_win(board):
+            return moves
+
     for i in range(0, 9):
         val = board[i]
         if val == NO_MARKER:
