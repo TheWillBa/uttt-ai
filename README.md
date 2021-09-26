@@ -2,3 +2,4 @@ A Python Version of the Ultimate Tic Tac Toe game to experiment with AI techniqu
 
 Current dependencies:
 numpy
+pygame

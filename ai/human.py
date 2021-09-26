@@ -1,6 +1,7 @@
 import pygame
 from game import display as disp
 
+
 # This function, naturally, depends on how the game is displayed to the user
 # As long as the xy_to_global function works as intended, this will work fine
 def human_player(moves):
