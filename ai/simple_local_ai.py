@@ -22,7 +22,7 @@ def simple_local_ai(valid_moves, main_board, local_board_num, my_symbol, opponen
     my_moves = []
     # This method is not like racket, actually modifies the game board while doing processing,
     # I imagine that this is faster than copying it a million times, but perhaps less scalable?
-    # Definitely not scalable to parallel processing
+    # Definitely not scalable to parallel processing (as if that really matters)
     local_valid_moves = gp.valid_moves_3x3(board, False)
     for move in local_valid_moves:
         board[move] = my_symbol
