@@ -3,8 +3,23 @@ from ai import random_ai as rai
 import numpy as np
 
 
-# Train ML AI to play against all the different 'naive' algorithms to see what happens
-# What can advanced AI learn from naive approaches?
+# Returns a list of the local indexed (0-8) moves that a given player can
+# play to win the board
+def local_moves_to_win(board, player):
+    my_moves = []
+
+    local_valid_moves = gp.valid_moves_3x3(board, False)
+    for move in local_valid_moves:
+        board[move] = player
+        if gp.check_3x3_win(board) == player:
+            my_moves.append(move)
+        board[move] = gp.NO_MARKER
+
+    return my_moves
+
+
+def list_local_to_global(local_moves, board_number):
+    return list((map(lambda m: gp.local_to_global([m, board_number]), local_moves)))
 
 
 # This AI plays a naive, greedy approach to UTTT. It considers the current local board only
@@ -19,26 +34,16 @@ def simple_local_ai(valid_moves, main_board, local_board_num, my_symbol, opponen
 
     board = main_board[local_board_num]
 
-    my_moves = []
-    # This method is not like racket, actually modifies the game board while doing processing,
-    # I imagine that this is faster than copying it a million times, but perhaps less scalable?
-    # Definitely not scalable to parallel processing (as if that really matters)
-    local_valid_moves = gp.valid_moves_3x3(board, False)
-    for move in local_valid_moves:
-        board[move] = my_symbol
-        if gp.check_3x3_win(board) == my_symbol:
-            my_moves.append(gp.local_to_global([move, local_board_num]))
-        board[move] = gp.NO_MARKER
+    my_winning_moves = list_local_to_global(local_moves_to_win(board, my_symbol), local_board_num)
+    opponent_winning_moves = list_local_to_global(local_moves_to_win(board, opponent_symbol), local_board_num)
 
     # check if opponent can win, but only add to my moves after since we will just be picking first from the list
-    for move in local_valid_moves:
-        board[move] = opponent_symbol
-        if gp.check_3x3_win(board) == opponent_symbol:
-            my_moves.append(gp.local_to_global([move, local_board_num]))
-        board[move] = gp.NO_MARKER
 
-    if len(my_moves) > 0:
-        return my_moves[0]
+    if len(my_winning_moves) > 0:
+        return my_winning_moves[0]
+
+    if len(opponent_winning_moves) > 0:
+        return opponent_winning_moves[0]
 
     return rai.random_player(valid_moves)
 
