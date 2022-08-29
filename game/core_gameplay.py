@@ -98,8 +98,24 @@ def valid_moves_3x3(board, can_move_in_won_board):
     return moves
 
 
+# Mutates big_board
 # Marks a big board at the global location given
 def mark_big_board(big_board, g_sq, marker):
     local = global_to_local(g_sq)
     big_board[local[1], local[0]] = marker
+
+
+# Mutates big_board, main_board_wins
+# Marks a big board at the global location given
+# Returns the number of the local board that was won if one was won, -1 otherwise
+def handle_mark_big_board(big_board, g_sq, marker, main_board_wins):
+    mark_big_board(big_board, g_sq, marker)
+    local_board_number = global_to_local(g_sq)[1]
+    local_winner = check_3x3_win(big_board[local_board_number])
+    if local_winner != NO_MARKER:
+        # If there was a local victory, see then if that ended the game
+        main_board_wins[local_board_number] = local_winner
+        return local_board_number
+    return -1
+
 

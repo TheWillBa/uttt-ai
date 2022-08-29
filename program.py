@@ -4,7 +4,7 @@ from game import core_gameplay as gp
 from game import display as disp
 
 # Each AI function will have its own file to allow for more modular creation
-from ai import human, random_ai
+from ai import human, random_ai, simple_local_ai
 
 # Initialize empty game state
 # This is really all of the data the AI will have as input to
@@ -62,24 +62,35 @@ while running:
     if current_player == 0:
         selected_move = int(human.human_player(all_moves))
     else:  # player '1'
-        pygame.time.delay(1000)
-        selected_move = random_ai.random_player(all_moves)
+        pygame.time.delay(500)
+        # selected_move = random_ai.random_player(all_moves)
+        stime = pygame.time.get_ticks()
+        mutable_move = simple_local_ai.simple_local_ai(all_moves, main_board, current_local_board, gp.PLAYER1_MARKER,
+                                                       gp.PLAYER0_MARKER)
+        mutable_time = pygame.time.get_ticks() - stime
+        stime = pygame.time.get_ticks()
+        copy_move = simple_local_ai.simple_local_ai_no_mutation(all_moves, main_board, current_local_board,
+                                                                gp.PLAYER1_MARKER,
+                                                                gp.PLAYER0_MARKER)
+        copy_time = pygame.time.get_ticks() - stime
+
+        print("Time for mutable: " + str(mutable_time))
+        print("Time for copying: " + str(copy_time))
+
+        if mutable_move != copy_move:
+            print("FUCK")
+
+        selected_move = copy_move
 
     # move local pair
     move_lp = gp.global_to_local(selected_move)
     local_sq = move_lp[0]
     local_board_number = move_lp[1]
 
-    gp.mark_big_board(main_board, selected_move, current_marker)
-
-    local_winner = gp.check_3x3_win(main_board[local_board_number])
+    if gp.handle_mark_big_board(main_board, selected_move, current_marker, main_board_wins) > -1:
+        winner = gp.check_3x3_win(main_board_wins)
 
     print(main_board)
-
-    if local_winner != gp.NO_MARKER:
-        # If there was a local victory, see then if that ended the game
-        main_board_wins[local_board_number] = local_winner
-        winner = gp.check_3x3_win(main_board_wins)
 
     # Change global-local board to local move value from last time IF it has valid moves
     if len(gp.valid_moves_3x3(main_board[local_sq], can_move_in_won_board)) > 0:
