@@ -80,7 +80,7 @@ while running:
         if mutable_move != copy_move:
             print("FUCK")
 
-        selected_move = copy_move
+        selected_move = mutable_move
 
     # move local pair
     move_lp = gp.global_to_local(selected_move)
