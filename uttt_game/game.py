@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
-import core_gameplay as gp
-import display as disp
+import uttt_game.core_gameplay as gp
+import uttt_game.display as disp
 
 # Each AI function will have its own file to allow for more modular creation
 from ai import human, random_ai, simple_local_ai
@@ -51,13 +51,29 @@ class Game:
             all_moves = gp.valid_moves(self.main_board, self.current_local_board, self.can_move_in_won_board)
 
             if self.current_player == 0:
-                selected_move = int(self.f_p1(all_moves, self.main_board, self.current_local_board,
-                                 gp.PLAYER0_MARKER, gp.PLAYER1_MARKER))
+                selected_move = self.f_p1(all_moves, self.main_board, self.current_local_board,
+                                 gp.PLAYER0_MARKER, gp.PLAYER1_MARKER)
             else:
-                selected_move = int(self.f_p2(all_moves, self.main_board, self.current_local_board,
-                                gp.PLAYER1_MARKER, gp.PLAYER0_MARKER))
+                selected_move = self.f_p2(all_moves, self.main_board, self.current_local_board,
+                                gp.PLAYER1_MARKER, gp.PLAYER0_MARKER)
 
             # todo handle if selected_move is bad
+            try:
+                move = int(selected_move)
+            except TypeError:
+                # there was a bad move given
+                sig, msg = selected_move
+                if sig == gp.BAD_MOVE_I_WIN:
+                    self.winner = gp.MARKERS[self.current_player]
+                elif sig == gp.BAD_MOVE_I_LOST:
+                    self.winner = gp.MARKERS[(self.current_player+1)%2]
+                self.end_game(reason=msg)
+                running = False
+                break
+            else:
+                selected_move = move
+
+
 
             # move local pair
             move_lp = gp.global_to_local(selected_move)
@@ -90,11 +106,13 @@ class Game:
     def current_player_name(self) -> str:
         return str(self.names[int(self.current_player-1)])
 
-    def end_game(self):
+    def end_game(self, reason=None):
         if self.winner > gp.DRAW:
             print("Player " + str(self.names[int(self.winner-1)]) + " wins")
         else:
             print("Draw")
+        if reason is not None:
+            print(f"Reason: {reason}")
         disp.wait_for_player_press()
 
 

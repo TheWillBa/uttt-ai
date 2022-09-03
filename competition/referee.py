@@ -38,6 +38,9 @@ def main():
     # Clean any pre-existing files
     clean()
 
+    # Create empty move_file
+    open("move_file", "w").close()
+
     # Get the competitor functions
     time_limit = 10
     f_p1, f_p2 = get_competitors(p1, p2, time_limit)

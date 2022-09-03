@@ -1,6 +1,6 @@
 import numpy as np
 import pygame
-import core_gameplay as gp
+import uttt_game.core_gameplay as gp
 
 #  VARIABLES
 SCREEN_WIDTH = 500
