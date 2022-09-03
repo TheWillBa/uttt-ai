@@ -57,7 +57,6 @@ class Game:
                 selected_move = self.f_p2(all_moves, self.main_board, self.current_local_board,
                                 gp.PLAYER1_MARKER, gp.PLAYER0_MARKER)
 
-            # todo handle if selected_move is bad
             try:
                 move = int(selected_move)
             except TypeError:
@@ -67,9 +66,10 @@ class Game:
                     self.winner = gp.MARKERS[self.current_player]
                 elif sig == gp.BAD_MOVE_I_LOST:
                     self.winner = gp.MARKERS[(self.current_player+1)%2]
+                elif sig == gp.BAD_MOVE_DRAW:
+                    self.winner = gp.DRAW
                 self.end_game(reason=msg)
                 running = False
-                break
             else:
                 selected_move = move
 

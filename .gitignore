@@ -1,3 +1,5 @@
 venv/
 .idea/
 *.pyc
+*.go
+move_file

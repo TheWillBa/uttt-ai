@@ -14,7 +14,10 @@ import time
 from functools import partial
 from os import listdir
 from os.path import isfile, join
-from uttt_game.core_gameplay import BAD_MOVE_I_WIN, BAD_MOVE_I_LOST, local_to_global
+
+import pygame
+
+from uttt_game.core_gameplay import BAD_MOVE_I_WIN, BAD_MOVE_I_LOST, BAD_MOVE_DRAW, local_to_global
 
 
 def get_competitors(p1_name, p2_name, time_limit):
@@ -43,6 +46,9 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
     check_time = st + 0.05
     while time.time() < st + time_limit + 1: # give a little leeway
         if time.time() > check_time:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return BAD_MOVE_DRAW, "Game manually terminated, draw"
             if os.path.getmtime("move_file") > mtime:
                 modified = True
                 break
