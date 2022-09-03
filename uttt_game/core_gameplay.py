@@ -9,6 +9,9 @@ PLAYER0_MARKER = 1
 PLAYER1_MARKER = 2
 NO_LOCAL_BOARD = -1
 
+BAD_MOVE_I_WIN = -2
+BAD_MOVE_I_LOST = -3
+
 WIN_INDEXES = [[0, 1, 2],
                [3, 4, 5],
                [6, 7, 8],

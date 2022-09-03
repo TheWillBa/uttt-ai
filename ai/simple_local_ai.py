@@ -1,4 +1,4 @@
-from game import core_gameplay as gp
+from uttt_game import core_gameplay as gp
 from ai import random_ai as rai
 import numpy as np
 

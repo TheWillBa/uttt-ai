@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
-from game import core_gameplay as gp
-from game import display as disp
+import core_gameplay as gp
+import display as disp
 
 # Each AI function will have its own file to allow for more modular creation
 from ai import human, random_ai, simple_local_ai
@@ -52,12 +52,12 @@ class Game:
 
             if self.current_player == 0:
                 selected_move = int(self.f_p1(all_moves, self.main_board, self.current_local_board,
-                                 gp.PLAYER0_MARKER,
-                                 gp.PLAYER1_MARKER))
+                                 gp.PLAYER0_MARKER, gp.PLAYER1_MARKER))
             else:
                 selected_move = int(self.f_p2(all_moves, self.main_board, self.current_local_board,
-                                gp.PLAYER1_MARKER,
-                                gp.PLAYER0_MARKER))
+                                gp.PLAYER1_MARKER, gp.PLAYER0_MARKER))
+
+            # todo handle if selected_move is bad
 
             # move local pair
             move_lp = gp.global_to_local(selected_move)
@@ -87,6 +87,8 @@ class Game:
             #  Drawing function
             disp.draw_game_board(self.main_board, self.main_board_wins, self.current_local_board, disp.X_OFFSET, disp.Y_OFFSET)
 
+    def current_player_name(self) -> str:
+        return str(self.names[int(self.current_player-1)])
 
     def end_game(self):
         if self.winner > gp.DRAW:
@@ -97,8 +99,9 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(human.human_player, random_ai.random_player, p1_name='Will', p2_name='AI')
+    game = Game(human.human_player, human.human_player, p1_name='Will', p2_name='Will2')
     game.run()
+
 
 
 
