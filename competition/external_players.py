@@ -37,12 +37,16 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
 
     # Sleep for time_limit seconds checking if move_file has been modified every 50 milliseconds
     modified = False
-    for i in range(int(time_limit/0.05)):
-        time.sleep(0.05)
 
-        if os.path.getmtime("move_file") > mtime:
-            modified = True
-            break
+    st = time.time()
+    check_incr = 0.05
+    check_time = st + 0.05
+    while time.time() < st + time_limit + 1: # give a little leeway
+        if time.time() > check_time:
+            if os.path.getmtime("move_file") > mtime:
+                modified = True
+                break
+            check_time += check_incr
 
     if modified:
         with open("move_file", "r") as fp:
@@ -57,20 +61,23 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
             # Tokenize move
             tokens = line.split()
             group_name = tokens[0]
-            global_board = tokens[1]
-            local_board = tokens[2]
+            global_board = int(tokens[1])
+            local_board = int(tokens[2])
 
             # Verify that move is from expected player
             if group_name != name:
                 return BAD_MOVE_I_WIN, 'Wrong player moved, causing an immediate loss'
 
             # Check if move is valid
-            if local_to_global((local_board, global_board)) not in moves:
+            g = local_to_global((local_board, global_board))
+            if g not in moves:
                 return BAD_MOVE_I_LOST, f'Player {name} played an invalid move in \nboard: {global_board} \nspace: {local_board}'
 
     else:
         # Player didn't move in time!
         return BAD_MOVE_I_LOST, f'Player {name} did not move in {time_limit} seconds'
+
+    return g
 
 
 

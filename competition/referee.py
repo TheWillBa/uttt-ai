@@ -42,7 +42,7 @@ def main():
     open("move_file", "w").close()
 
     # Get the competitor functions
-    time_limit = 10
+    time_limit = 600
     f_p1, f_p2 = get_competitors(p1, p2, time_limit)
 
     # Run game
