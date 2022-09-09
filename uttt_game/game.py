@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import pygame
 import uttt_game.core_gameplay as gp
@@ -6,8 +8,12 @@ import uttt_game.display as disp
 # Each AI function will have its own file to allow for more modular creation
 from ai import human, random_ai, simple_local_ai
 
+
+
+
+
 class Game:
-    def __init__(self, f_p1, f_p2, p1_name=None, p2_name=None):
+    def __init__(self, f_p1, f_p2, p1_name=None, p2_name=None, rand_start=False):
         self.names = [gp.PLAYER0_MARKER if p1_name is None else p1_name,
                       gp.PLAYER1_MARKER if p2_name is None else p2_name]
         self.f_p1 = f_p1
@@ -26,18 +32,36 @@ class Game:
 
         # True allows you to send opponents to won boards (Thad rules)
         # False means won boards are off limits (Classic rules)
-        self.can_move_in_won_board = True
+        self.can_move_in_won_board = False
 
         # True makes the game a draw when a player is sent to a full square (Thad rules)
         # False allows the player to play in any free space (Classic rules)
-        self.send_to_full_board_is_draw = True
+        self.send_to_full_board_is_draw = False
 
         #  Pygame initialization
         pygame.init()
 
+        if rand_start:
+            nums = gp.get_init_random_string()
+            print(nums)
+            i = 0
+            j = 1
+            p = 0
+            while i < 4:
+                board = nums[i]
+                spot = nums[j]
+                gp.handle_mark_big_board(self.main_board, gp.local_to_global((spot, board)), self.markers[p],
+                                         self.main_board_wins)
+                p += 1
+                p %= 2
+                i += 1
+                j += 1
+            self.current_local_board = nums[i]
+
     def run(self):
         #  Drawing function
-        disp.draw_game_board(self.main_board, self.main_board_wins, self.current_local_board, disp.X_OFFSET, disp.Y_OFFSET)
+        disp.draw_game_board(self.main_board, self.main_board_wins, self.current_local_board, disp.X_OFFSET,
+                             disp.Y_OFFSET)
         # GAME LOOP
         running = True
         while running:
@@ -52,10 +76,10 @@ class Game:
 
             if self.current_player == 0:
                 selected_move = self.f_p1(all_moves, self.main_board, self.current_local_board,
-                                 gp.PLAYER0_MARKER, gp.PLAYER1_MARKER)
+                                          gp.PLAYER0_MARKER, gp.PLAYER1_MARKER)
             else:
                 selected_move = self.f_p2(all_moves, self.main_board, self.current_local_board,
-                                gp.PLAYER1_MARKER, gp.PLAYER0_MARKER)
+                                          gp.PLAYER1_MARKER, gp.PLAYER0_MARKER)
 
             try:
                 move = int(selected_move)
@@ -65,15 +89,13 @@ class Game:
                 if sig == gp.BAD_MOVE_I_WIN:
                     self.winner = gp.MARKERS[self.current_player]
                 elif sig == gp.BAD_MOVE_I_LOST:
-                    self.winner = gp.MARKERS[(self.current_player+1)%2]
+                    self.winner = gp.MARKERS[(self.current_player + 1) % 2]
                 elif sig == gp.BAD_MOVE_DRAW:
                     self.winner = gp.DRAW
                 self.end_game(reason=msg)
                 running = False
             else:
                 selected_move = move
-
-
 
             # move local pair
             move_lp = gp.global_to_local(selected_move)
@@ -101,14 +123,15 @@ class Game:
                     running = False
 
             #  Drawing function
-            disp.draw_game_board(self.main_board, self.main_board_wins, self.current_local_board, disp.X_OFFSET, disp.Y_OFFSET)
+            disp.draw_game_board(self.main_board, self.main_board_wins, self.current_local_board, disp.X_OFFSET,
+                                 disp.Y_OFFSET)
 
     def current_player_name(self) -> str:
-        return str(self.names[int(self.current_player-1)])
+        return str(self.names[int(self.current_player - 1)])
 
     def end_game(self, reason=None):
         if self.winner > gp.DRAW:
-            print("Player " + str(self.names[int(self.winner-1)]) + " wins")
+            print("Player " + str(self.names[int(self.winner - 1)]) + " wins")
         else:
             print("Draw")
         if reason is not None:
@@ -117,9 +140,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(human.human_player, human.human_player, p1_name='Will', p2_name='Will2')
+    game = Game(human.human_player, human.human_player, p1_name='Will', p2_name='Will2', rand_start=True)
     game.run()
-
-
-
-

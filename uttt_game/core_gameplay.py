@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 #  Constants
@@ -124,4 +126,29 @@ def handle_mark_big_board(big_board, g_sq, marker, main_board_wins):
         return local_board_number
     return -1
 
+def get_init_random_string():
+    okay = False
+    while not okay:
+        nums = generate_valid_random_string()
+        print(nums)
+        if not(nums[0] == 4 and nums[1] == 4 and nums[3] == 4 and nums[2] != 4 and nums[4] != 4):
+            okay = True
+    return nums
+
+
+def generate_valid_random_string():
+    banned = []
+    for i in range(9):
+        banned.append(set())
+
+    nums = []
+    for i in range(5):
+        valid = set(range(9))
+        if i > 0:
+            valid = valid - banned[nums[i - 1]]
+        choice = random.choice(list(valid))
+        nums.append(choice)
+        banned[nums[i]].add(choice)
+
+    return nums
 
