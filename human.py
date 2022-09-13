@@ -1,5 +1,5 @@
 import pygame
-from uttt_game import display as disp
+import display as disp
 
 
 # This function, naturally, depends on how the game is displayed to the user

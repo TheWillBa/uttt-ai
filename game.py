@@ -1,12 +1,10 @@
-import random
-
 import numpy as np
 import pygame
 import core_gameplay as gp
 import display as disp
 
 # Each AI function will have its own file to allow for more modular creation
-from ai import human, random_ai, simple_local_ai
+import human
 
 
 def nums_output(nums):

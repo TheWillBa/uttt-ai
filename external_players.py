@@ -17,7 +17,7 @@ from os.path import isfile, join
 
 import pygame
 
-from uttt_game.core_gameplay import BAD_MOVE_I_WIN, BAD_MOVE_I_LOST, BAD_MOVE_DRAW, local_to_global
+from core_gameplay import BAD_MOVE_I_WIN, BAD_MOVE_I_LOST, BAD_MOVE_DRAW, local_to_global
 
 
 def get_competitors(p1_name, p2_name, time_limit):
@@ -99,7 +99,7 @@ def clean():
         re.compile("first_four_moves")
     ]
 
-    files = [f for f in listdir("./") if isfile(join("./", f))]
+    files = [f for f in listdir("/") if isfile(join("/", f))]
     for file in files:
         for pattern in patterns:
             if pattern.match(file):

@@ -3,13 +3,14 @@ import pygame
 import core_gameplay as gp
 
 #  VARIABLES
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
+SCREEN_SIDE = 1000
+SCREEN_WIDTH = SCREEN_SIDE
+SCREEN_HEIGHT = SCREEN_SIDE
 SCREEN = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 OVERLAYER = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-SQUARE_SIDE = 55
+SQUARE_SIDE = int(SCREEN_SIDE/9)
 P0_COLOR = (0, 0, 255)
-P1_COLOR = (255, 0, 0)
+P1_COLOR = (255, 165, 0)
 X_OFFSET = 0
 Y_OFFSET = 0
 
@@ -106,7 +107,7 @@ def overlay_decided(board_wins, x, y):
             # TODO make based on color variables
             color = (0, 0, 255, 100)
         elif marker == gp.PLAYER1_MARKER:
-            color = (255, 0, 0, 100)
+            color = (255, 165, 0, 100)
         elif marker == gp.DRAW:
             color = (0, 0, 0, 100)
         else:

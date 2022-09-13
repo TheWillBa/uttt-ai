@@ -12,7 +12,7 @@ import argparse
 import sys
 import random
 from external_players import clean, get_competitors
-from uttt_game.game import Game
+from game import Game
 
 def main():
     """
@@ -42,11 +42,11 @@ def main():
     open("move_file", "w").close()
 
     # Get the competitor functions
-    time_limit = 10
+    time_limit = 60
     f_p1, f_p2 = get_competitors(p1, p2, time_limit)
 
     # Run game
-    game = Game(f_p1, f_p2, p1_name=p1, p2_name=p2)
+    game = Game(f_p1, f_p2, p1_name=p1, p2_name=p2, rand_start=True)
     game.run()
 
 
