@@ -152,5 +152,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(human.human_player, human.human_player, p1_name='Will', p2_name='Will2', rand_start=True)
+    game = Game(human.human_player, human.human_player, p1_name='Player 1', p2_name='Player 2', rand_start=True)
     game.run()

@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description="Referee a game of Othello between two programs")
     parser.add_argument("player_one", type=str, help="Group name of player one")
     parser.add_argument("player_two", type=str, help="Group name of player two")
+    parser.add_argument("--time_limit", type=int, help="Time limit (default 10 seconds)", required=False)
     args = parser.parse_args(sys.argv[1:])
 
 
@@ -42,7 +43,9 @@ def main():
     open("move_file", "w").close()
 
     # Get the competitor functions
-    time_limit = 60
+    # I recommend increasing the time limit for testing so that you have time to write moves into move_file yourself
+    # use the --time_limit optional parameter in the command line to set the time limit
+    time_limit = 10 if args.time_limit is None else args.time_limit
     f_p1, f_p2 = get_competitors(p1, p2, time_limit)
 
     # Run game
