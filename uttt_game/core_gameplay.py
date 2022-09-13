@@ -128,6 +128,7 @@ def handle_mark_big_board(big_board, g_sq, marker, main_board_wins):
 
 def get_init_random_string():
     okay = False
+    nums = []
     while not okay:
         nums = generate_valid_random_string()
         print(nums)

@@ -2,14 +2,28 @@ import random
 
 import numpy as np
 import pygame
-import uttt_game.core_gameplay as gp
-import uttt_game.display as disp
+import core_gameplay as gp
+import display as disp
 
 # Each AI function will have its own file to allow for more modular creation
 from ai import human, random_ai, simple_local_ai
 
 
-
+def nums_output(nums):
+    symbols = ['X', 'O']
+    s = ''
+    i = 0
+    j = 1
+    p = 0
+    while i < 4:
+        board = nums[i]
+        spot = nums[j]
+        s += symbols[p] + " " + str(board) + " " + str(spot) + '\n'
+        p += 1
+        p %= 2
+        i += 1
+        j += 1
+    return s
 
 
 class Game:
@@ -43,7 +57,7 @@ class Game:
 
         if rand_start:
             nums = gp.get_init_random_string()
-            print(nums)
+            open("first_four_moves", "w").write(nums_output(nums))
             i = 0
             j = 1
             p = 0

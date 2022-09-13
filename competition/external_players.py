@@ -38,13 +38,13 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
     mtime = os.path.getmtime("move_file")
     open("{p}.go".format(p=name), "w").close()
 
-    # Sleep for time_limit seconds checking if move_file has been modified every 50 milliseconds
+    # Check if move_file has been modified every 50 milliseconds
     modified = False
 
     st = time.time()
     check_incr = 0.05
     check_time = st + 0.05
-    while time.time() < st + time_limit + 1: # give a little leeway
+    while time.time() < st + time_limit:
         if time.time() > check_time:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -95,7 +95,8 @@ def clean():
     patterns = [
         re.compile("move_file"),
         re.compile("(:?.*).go"),
-        re.compile("end_game")
+        re.compile("end_game"),
+        re.compile("first_four_moves")
     ]
 
     files = [f for f in listdir("./") if isfile(join("./", f))]
