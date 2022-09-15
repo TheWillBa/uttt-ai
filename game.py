@@ -55,7 +55,9 @@ class Game:
 
         if rand_start:
             nums = gp.get_init_random_string()
-            open("first_four_moves", "w").write(nums_output(nums))
+            ffm = open("first_four_moves", "w")
+            ffm.write(nums_output(nums))
+            ffm.close()
             i = 0
             j = 1
             p = 0
@@ -142,12 +144,20 @@ class Game:
         return str(self.names[int(self.current_player - 1)])
 
     def end_game(self, reason=None):
+
         if self.winner > gp.DRAW:
             print("Player " + str(self.names[int(self.winner - 1)]) + " wins")
+            w = str(self.names[int(self.winner - 1)])
+            L = str(self.names[(int(self.winner - 1) + 1) % 2])
+            if reason is None:
+                reason = "The winning player has won 3 local boards in a row on the global board!"
+            msg = f"END: {w} WINS! {L} LOSES! " + reason
         else:
-            print("Draw")
-        if reason is not None:
-            print(f"Reason: {reason}")
+            msg = "END: Match TIED!"
+        eg = open("end_game", "w")
+        eg.write(msg)
+        print(msg)
+        eg.close()
         disp.wait_for_player_press()
 
 

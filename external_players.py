@@ -48,7 +48,7 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
         if time.time() > check_time:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return BAD_MOVE_DRAW, "Game manually terminated, draw"
+                    return BAD_MOVE_DRAW, "Game manually terminated!"
             if os.path.getmtime("move_file") > mtime:
                 modified = True
                 break
@@ -72,16 +72,16 @@ def external_player(moves, main_board, local_board_num, my_symbol, opponent_symb
 
             # Verify that move is from expected player
             if group_name != name:
-                return BAD_MOVE_I_WIN, 'Wrong player moved, causing an immediate loss'
+                return BAD_MOVE_I_WIN, 'Out-of-order move!'
 
             # Check if move is valid
             g = local_to_global((local_board, global_board))
             if g not in moves:
-                return BAD_MOVE_I_LOST, f'Player {name} played an invalid move in \nboard: {global_board} \nspace: {local_board}'
+                return BAD_MOVE_I_LOST, f'Invalid move!'
 
     else:
         # Player didn't move in time!
-        return BAD_MOVE_I_LOST, f'Player {name} did not move in {time_limit} seconds'
+        return BAD_MOVE_I_LOST, f'Time out!'
 
     return g
 
