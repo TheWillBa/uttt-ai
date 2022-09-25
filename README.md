@@ -2,6 +2,7 @@ Hello CS 4341 A22!
 
 Below is information about using the Referee we are providing for project 2.
 _________________________________________________________________________________
+
 # Dependencies and Python Version
 
 This is the referee program for the Ultimate Tic Tac Toe (UTTT) AI for Project 2. 
@@ -25,7 +26,7 @@ ___________________________________________________________________
 
 Once python and dependencies are sorted, you can run the referee with 
 
-```python referee.py <Player 1 name> <Player 2 name> --time_limit <time limit>```
+`python referee.py <Player 1 name> <Player 2 name> --time_limit <time limit>`
 
 The Player 1 and 2 names are *single word names* for each of the agents.
 `--time_limit` is an optional argument that allows you to specify the time limit to play (in seconds).
@@ -36,7 +37,7 @@ The referee will create the files that it maintains in the same directory that t
 
 If you would like to just play the game, run
 
-```python game.py <Player 1 name> <Player 2 name>```
+`python game.py <Player 1 name> <Player 2 name>`
 
 and then you can play using the UI.
 
@@ -49,8 +50,17 @@ _________________________________________________________________________
 
 Honestly, I fully expect there to be bugs in this code. If you for any reason suspect that 
 the referee is not behaving as described in the assignment on Canvas, please let us know in
-the `project-2-bugs` channel in Slack. 
+the `project-2-referee-bugs` channel in Slack. 
 
+## UPDATE TO V2 09/15/2022
+
+The first version of the referee did not produce a *end_game* file like it should.
+This version fixes that issue and updates the output messages to match the ones in Canvas.
+
+## UPDATE TO V3 09/20/2022
+
+The previous version of the referee did not filter out invalid initial moves.
+This version fixes that issue so the same move cannot be made twice.
 _________________________________________________________________________
 
 That is all! Have fun playing UTTT and finding fun ways to break my code...
